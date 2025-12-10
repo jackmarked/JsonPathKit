@@ -1,10 +1,10 @@
 ﻿using JetDevel.JsonPath.CodeAnalysis;
-using System.Text;
+using System.Text.Unicode;
 
 namespace JetDevel.JsonPath;
 public sealed partial class JsonPathServices
 {
-    readonly Dictionary<string, FunctionDefinition> functionMap;
+    readonly Dictionary<string, FunctionDefinition?> functionMap;
     public JsonPathServices()
     {
         functionMap = [];
@@ -23,25 +23,25 @@ public sealed partial class JsonPathServices
     {
         if(string.IsNullOrEmpty(functionName))
             return null;
-        if(functionMap.TryGetValue(functionName, out var fuction))
-            return fuction;
-        return null;
+        return functionMap.GetValueOrDefault(functionName);
+
     }
     public JsonPathQuery FromSource(string source)
     {
-        var bytes = Encoding.UTF8.GetBytes(source);
-        return FromUtf8(bytes);
+        ReadOnlySpan<char> sourceSpan = source;
+        var maxLength = sourceSpan.Length * 2;
+        var destination = maxLength > 160 ? new byte[maxLength] : stackalloc byte[maxLength];
+        Utf8.FromUtf16(source, destination, out _, out var length);
+        return FromUtf8(destination[..length]);
     }
-    public bool TryParse(ReadOnlySpan<byte> utf8Bytes, out JsonPathQuerySyntax? query)
+    public static bool TryParse(ReadOnlySpan<byte> utf8Bytes, out JsonPathQuerySyntax? query)
     {
         var charReader = new Utf8BytesUnicodeCharacterReader(utf8Bytes.ToArray());
         var lexer = new Lexer(charReader);
-        Parser parser = new Parser(lexer);
+        var parser = new Parser(lexer);
         var result = parser.ParseQuery();
         query = result.JsonPathQuery;
-        if(query == null)
-            return false;
-        return true;
+        return query != null;
     }
     public JsonPathQuery FromUtf8(ReadOnlySpan<byte> utf8Bytes)
     {

@@ -304,7 +304,7 @@ public sealed partial class Lexer
         }
         return true;
     }
-    bool IsHexDigit(int codePoint) => codePoint < 0x80 && KnownCodes.HexDigits.Contains((byte)codePoint);
+    static bool IsHexDigit(int codePoint) => codePoint < 0x80 && KnownCodes.HexDigits.Contains((byte)codePoint);
 
 
     bool Unescaped()

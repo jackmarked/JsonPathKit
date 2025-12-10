@@ -87,11 +87,10 @@ sealed class SyntaxFactoryTests
         var result = SyntaxFactory.Parse("$['\\uD83E\\uDD14']");
         var childSegment = result.Segments[0] as BracketedSelectionSegmentSyntax;
         var selector1 = childSegment.Selectors[0] as NameSelectorSyntax;
-        Assert.Multiple(() =>
+        using(Assert.EnterMultipleScope())
         {
             Assert.That(selector1.Name, Is.EqualTo(expectedName));
-
-        });
+        }
     }
     [Test]
     public void Parse_BracketedSelectorWithNameSelectorUnicode_ReturnsValidSelectors()
@@ -101,11 +100,10 @@ sealed class SyntaxFactoryTests
         var result = SyntaxFactory.Parse("$.🙏");
         var childSegment = result.Segments[0] as ChildSegmentSyntax;
         var selector1 = childSegment.Selector as MemberNameShorthandSelectorSyntax;
-        Assert.Multiple(() =>
+        using(Assert.EnterMultipleScope())
         {
             Assert.That(selector1.MemberName, Is.EqualTo(a));
-
-        });
+        }
     }
     [Test]
     public void Parse_ComplexSegments_ReturnsValidSelector()
@@ -113,10 +111,10 @@ sealed class SyntaxFactoryTests
         var result = SyntaxFactory.Parse("$.store.book[0].title");
         //var childSegment = result.Segments[0] as BracketedSelectionSegmentSyntax;
         //var selector = childSegment.Selectors[0] as SliceSelectorSyntax;
-        Assert.Multiple(() =>
+        using(Assert.EnterMultipleScope())
         {
             Assert.That(result.Segments, Has.Count.EqualTo(4));
-        });
+        }
     }
     [Test]
     public void Parse_DescendantSegmentWithMemberName_ReturnsValidSelector()

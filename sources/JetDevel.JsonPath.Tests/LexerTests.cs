@@ -118,10 +118,10 @@ sealed class LexerTests
         var source = "$[123489]";
 
         // Assert.
-        AssertTokenKinds(source, [SyntaxKind.DollarMarkToken,
+        AssertTokenKinds(source, SyntaxKind.DollarMarkToken,
             SyntaxKind.OpenBracketToken,
             SyntaxKind.IntegerNumberLiteral,
-            SyntaxKind.CloseBracketToken]);
+            SyntaxKind.CloseBracketToken);
     }
     [Test]
     public void GetTokens_CallWithMultiIndex_ReturnsValidTokens()
@@ -130,14 +130,14 @@ sealed class LexerTests
         var source = "$[1, 2, 8]";
 
         // Assert.
-        AssertTokenKinds(source, [SyntaxKind.DollarMarkToken,
+        AssertTokenKinds(source, SyntaxKind.DollarMarkToken,
             SyntaxKind.OpenBracketToken,
             SyntaxKind.IntegerNumberLiteral,
             SyntaxKind.CommaToken,
             SyntaxKind.IntegerNumberLiteral,
             SyntaxKind.CommaToken,
             SyntaxKind.IntegerNumberLiteral,
-            SyntaxKind.CloseBracketToken]);
+            SyntaxKind.CloseBracketToken);
     }
     [Test]
     public void GetTokens_CallWithMemberName_ReturnsValidTokens()
@@ -392,7 +392,7 @@ sealed class LexerTests
         // Assert.
         AssertTokenKinds(source, SyntaxKind.Unknown);
     }
-    [Test/*, Ignore("todo")*/]
+    [Test]
     public void GetTokens_CallWithWrongDoubleEscapedStringLiteral_ReturnsUnknown1()
     {
         // Arrange.

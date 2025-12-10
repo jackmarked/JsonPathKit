@@ -1,6 +1,7 @@
 ﻿namespace JetDevel.JsonPath;
 public abstract class FunctionDefinition
 {
+    protected private FunctionDefinition() { }
     public abstract string Name { get; }
     public abstract FunctionParameterType ResultType { get; }
     public abstract IReadOnlyList<FunctionParameterType> Parameters { get; }

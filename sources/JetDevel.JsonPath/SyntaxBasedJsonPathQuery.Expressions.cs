@@ -283,7 +283,7 @@ partial class SyntaxBasedJsonPathQuery
                 return right.PrimitiveKind switch
                 {
                     PrimitiveKind.Integer => new(left.AsLong() == right.AsLong()),
-                    PrimitiveKind.Float => new(left.AsLong() == right.AsDouble()),
+                    PrimitiveKind.Float => new(Convert.ToDouble(left.AsLong()).Equals(right.AsDouble())),
                     _ => ExpressionValue.Nothing,
                 };
             case PrimitiveKind.Boolean:
@@ -295,8 +295,8 @@ partial class SyntaxBasedJsonPathQuery
             case PrimitiveKind.Float:
                 return right.PrimitiveKind switch
                 {
-                    PrimitiveKind.Integer => new(left.AsDouble() == right.AsLong()),
-                    PrimitiveKind.Float => new(left.AsDouble() == right.AsDouble()),
+                    PrimitiveKind.Integer => new(left.AsDouble().Equals(Convert.ToDouble(right.AsLong()))),
+                    PrimitiveKind.Float => new(left.AsDouble().Equals(right.AsDouble())),
                     _ => ExpressionValue.Nothing,
                 };
             case PrimitiveKind.String:

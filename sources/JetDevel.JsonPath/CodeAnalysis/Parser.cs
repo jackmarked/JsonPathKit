@@ -7,7 +7,7 @@ sealed partial class Parser
     readonly Lexer lexer;
     Token token;
     Token nextToken;
-    List<string>? errors = null;
+    List<string>? errors;
     void AddError(string message)
     {
         errors ??= [];
@@ -44,12 +44,12 @@ sealed partial class Parser
         var segments = Segments();
         Expect(SyntaxKind.EndOfFile);
         if(errors != null)
-            return new (errors.AsReadOnly());
+            return new(errors.AsReadOnly());
         return new(new JsonPathQuerySyntax(segments.AsReadOnly()));
     }
     List<SegmentSyntax> Segments()
     {
-        var result = new List<SegmentSyntax>();
+        List<SegmentSyntax> result = [];
         while(TryParseSegment(out var segment))
             result.Add(segment);
         return result;
@@ -81,14 +81,14 @@ sealed partial class Parser
     WildcardSelectorSyntax WildcardSelector()
     {
         Expect(SyntaxKind.AsteriskToken);
-        return new WildcardSelectorSyntax();
+        return new();
     }
     BracketedSelectionSegmentSyntax BracketedSelection()
     {
         Expect(SyntaxKind.OpenBracketToken);
         var selectors = Selectors();
         Expect(SyntaxKind.CloseBracketToken);
-        return new BracketedSelectionSegmentSyntax(selectors);
+        return new(selectors);
     }
     List<SelectorSyntax> Selectors()
     {
@@ -132,7 +132,7 @@ sealed partial class Parser
         Token? start = integerOrColonToken.Kind == SyntaxKind.IntegerNumberLiteral ? integerOrColonToken : null;
         Token firstColon = integerOrColonToken.Kind == SyntaxKind.ColonToken ? integerOrColonToken : nextToken;
         Token? end = null;
-        Token? seconColon = null;
+        Token? secondColon = null;
         Token? step = null;
         if(start.HasValue)
         {
@@ -141,10 +141,10 @@ sealed partial class Parser
         if(TryReadToken(SyntaxKind.IntegerNumberLiteral) || TryReadToken(SyntaxKind.ColonToken))
         {
             if(token.Kind == SyntaxKind.ColonToken)
-                seconColon = token;
+                secondColon = token;
             else
                 end = token;
-            if(seconColon.HasValue)
+            if(secondColon.HasValue)
             {
                 if(TryReadToken(SyntaxKind.IntegerNumberLiteral))
                     step = token;
@@ -152,12 +152,12 @@ sealed partial class Parser
             else
             {
                 if(TryReadToken(SyntaxKind.ColonToken))
-                    seconColon = token;
+                    secondColon = token;
             }
         }
-        if(seconColon.HasValue && TryReadToken(SyntaxKind.IntegerNumberLiteral))
+        if(secondColon.HasValue && TryReadToken(SyntaxKind.IntegerNumberLiteral))
             step = token;
-        return new SliceSelectorSyntax(start, firstColon, end, seconColon, step);
+        return new SliceSelectorSyntax(start, firstColon, end, secondColon, step);
         // slice-selector /       [start S] ":" S [end S] [":" [S step ]]
         /*
  slice-selector /       [start S] ":" S [end S] [":" [S step ]]
@@ -167,7 +167,7 @@ sealed partial class Parser
     MemberNameShorthandSelectorSyntax MemberNameShorthand()
     {
         Expect(SyntaxKind.MemberNameToken);
-        return new MemberNameShorthandSelectorSyntax(token.Text);
+        return new(token.Text);
     }
     DescendantSegmentSyntax? DescendantSegment()
     {
@@ -175,11 +175,11 @@ sealed partial class Parser
         switch(nextToken.Kind)
         {
             case SyntaxKind.OpenBracketToken:
-                return new DescendantSegmentSyntax(BracketedSelection());
+                return new(BracketedSelection());
             case SyntaxKind.AsteriskToken:
-                return new DescendantSegmentSyntax(WildcardSelector());
+                return new(WildcardSelector());
             case SyntaxKind.MemberNameToken:
-                return new DescendantSegmentSyntax(MemberNameShorthand());
+                return new(MemberNameShorthand());
             default:
                 AddErrorAndReadToken($"Expected segment but was {nextToken.Kind}.");
                 return null;
@@ -189,6 +189,12 @@ descendant-segment  = ".." (bracketed-selection /
           wildcard-selector /
           member-name-shorthand)
 */
+    }
+    void Expect(Func<Token, bool> predicate)
+    {
+        if(!predicate(nextToken))
+            AddError($"Unexpected token '{nextToken.Text}'.");
+        ReadToken();
     }
     void Expect(SyntaxKind tokenKind)
     {

@@ -14,7 +14,7 @@ public readonly struct Token
             return;
         var length = utf8Text.Length;
         var chars = length > 80 ? new char[length] : stackalloc char[length];
-        Utf8.ToUtf16(utf8Text, chars, out var read, out var written);
+        _ = Utf8.ToUtf16(utf8Text, chars, out _, out var written);
         Text = new string(chars[..written]);
     }
     public Token(SyntaxKind kind, ReadOnlySpan<int> utf32Text)

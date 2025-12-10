@@ -2,7 +2,7 @@
 
 public sealed class BinaryExpressionSyntax: ExpressionSyntax
 {
-    Token operatorToken;
+    readonly Token operatorToken;
     internal BinaryExpressionSyntax(ExpressionSyntax left, ExpressionSyntax right, Token operatorToken)
     {
         Left = left;

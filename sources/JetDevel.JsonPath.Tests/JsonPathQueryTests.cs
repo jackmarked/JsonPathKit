@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
-using System.Text.Unicode;
 
 namespace JetDevel.JsonPath.Tests;
 
@@ -288,13 +287,12 @@ sealed class JsonPathQueryTests: JsonPathQueryTestFixture
     public void Execute_()
     {
         var list = new ConcurrentBag<string>();
-        var services = new JsonPathServices();
         // Arrange.
         for(int i = 0; i < 128; i++)
             try
             {
                 ReadOnlySpan<byte> source = [(byte)'$', (byte)i];
-                if(services.TryParse(source, out _))
+                if(JsonPathServices.TryParse(source, out _))
                     list.Add(Encoding.UTF8.GetString(source));
             }
             catch { }
@@ -305,7 +303,7 @@ sealed class JsonPathQueryTests: JsonPathQueryTestFixture
                 {
                     ReadOnlySpan<byte> source = [(byte)'$', (byte)i, (byte)j];
 
-                    if(services.TryParse(source, out _))
+                    if(JsonPathServices.TryParse(source, out _))
                         list.Add(Encoding.UTF8.GetString(source));
                 }
                 catch { }
@@ -317,7 +315,7 @@ sealed class JsonPathQueryTests: JsonPathQueryTestFixture
                     try
                     {
                         ReadOnlySpan<byte> source = [(byte)'$', (byte)i, (byte)j, (byte)k];
-                        if(services.TryParse(source, out _))
+                        if(JsonPathServices.TryParse(source, out _))
                             list.Add(Encoding.UTF8.GetString(source));
                     }
                     catch { }
@@ -330,7 +328,7 @@ sealed class JsonPathQueryTests: JsonPathQueryTestFixture
                     try
                     {
                         ReadOnlySpan<byte> source = [(byte)'$', (byte)i, (byte)j, (byte)k, (byte)l];
-                        if(services.TryParse(source, out _))
+                        if(JsonPathServices.TryParse(source, out _))
                             list.Add(Encoding.UTF8.GetString(source));
                     }
                     catch { }

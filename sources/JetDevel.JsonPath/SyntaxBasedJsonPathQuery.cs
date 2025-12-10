@@ -97,8 +97,8 @@ sealed partial class SyntaxBasedJsonPathQuery: JsonPathQuery
     {
         var start = originalStart ?? (step < 0 ? length - 1 : 0);
         var end = originalEnd ?? (step < 0 ? -length - 1 : length);
-        long normalizedStart = NormalizeStartEnd(start, length);
-        long normalizedEnd = NormalizeStartEnd(end, length);
+        long normalizedStart = NormalizeBound(start, length);
+        long normalizedEnd = NormalizeBound(end, length);
         if(step < 0)
         {
             var upperBound = long.Min(long.Max(normalizedStart, -1), length - 1);
@@ -112,7 +112,7 @@ sealed partial class SyntaxBasedJsonPathQuery: JsonPathQuery
             return (lowerBound, upperBound);
         }
     }
-    static long NormalizeStartEnd(long value, int length)
+    static long NormalizeBound(long value, int length)
     {
         if(value > -1)
             return value;
@@ -178,8 +178,8 @@ sealed partial class SyntaxBasedJsonPathQuery: JsonPathQuery
     static List<JsonElement> WildcardSelect(JsonElement element, bool descendant = false)
     {
         if(descendant)
-            return new(EnumerateDescendant(element));
-        return new(EnumerateCurrent(element));
+            return [.. EnumerateDescendant(element)];
+        return [.. EnumerateCurrent(element)];
     }
     static IEnumerable<JsonElement> EnumerateCurrent(JsonElement element)
     {

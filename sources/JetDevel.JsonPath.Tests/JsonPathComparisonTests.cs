@@ -26,7 +26,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["first", "second", "third"]
 """;
-        AssertQueryResult(source, "$[7:10]", "[]");
+        AssertQueryResultIsEmpty(source, "$[7:10]");
     }
     [Test]
     public void ArraySliceOnObject()
@@ -82,7 +82,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[-4:-5]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[-4:-5]");
     }
     [Test]
     public void ArraySliceWithNegativeStartAndEndAndRangeOf0()
@@ -90,7 +90,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[-4:-4]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[-4:-4]");
     }
     [Test]
     public void ArraySliceWithNegativeStarAndEndAndRangeOf1()
@@ -106,7 +106,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[-4:1]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[-4:1]");
     }
     [Test]
     public void ArraySliceWithNegativeStartAndPositiveEndAndRangeOf0()
@@ -114,7 +114,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[-4:2]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[-4:2]");
     }
     [Test]
     public void ArraySliceWithNegativeStartAndPositiveEndAndRangeOf1()
@@ -146,7 +146,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["first", "second", "third", "forth", "fifth"]
 """;
-        AssertQueryResult(source, "$[0:3:-2]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[0:3:-2]");
     }
     [Test]
     public void ArraySliceWithNegativeStepOnly()
@@ -186,7 +186,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {":": 42, "more": "string"}
 """;
-        AssertQueryResult(source, "$[:]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[:]");
     }
     [Test]
     public void ArraySliceWithOpenStartAndEndAndStepEmpty()
@@ -202,7 +202,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[3:-4]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[3:-4]");
     }
     [Test]
     public void ArraySliceWithPositiveStartAndNegativeEndAndRangeOf0()
@@ -210,7 +210,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [2, "a", 4, 5, 100, "nice"]
 """;
-        AssertQueryResult(source, "$[3:-3]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[3:-3]");
     }
     [Test]
     public void ArraySliceWithPositiveStartAndNegativeEndAndRangeOf1()
@@ -226,7 +226,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["first", "second", "third", "forth", "fifth"]
 """;
-        AssertQueryResult(source, "$[2:1]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[2:1]");
     }
     [Test]
     public void ArraySliceWithRangeOf0()
@@ -234,7 +234,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["first", "second"]
 """;
-        AssertQueryResult(source, "$[0:0]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[0:0]");
     }
     [Test]
     public void ArraySliceWithRangeOf1()
@@ -274,7 +274,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["first", "second", "third", "forth", "fifth"]
 """;
-        AssertQueryResult(source, "$[0:3:0]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[0:3:0]");
     }
     [Test]
     public void ArraySliceWithStep1()
@@ -334,7 +334,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
   "key": "value"
 }
 """;
-        AssertQueryResult(source, "$['missing']", @"[]");
+        AssertQueryResultIsEmpty(source, "$['missing']");
     }
     [Test]  // Bracket notation after recursive descent
     public void BracketNotationAfterRecursiveDescent()
@@ -365,7 +365,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {"ü": 42}
 """;
-        AssertQueryResult(source, "$['ü']", @"[]");
+        AssertQueryResultIsEmpty(source, "$['ü']");
     }
     [Test]
     public void BracketNotationWithDot()
@@ -419,7 +419,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["one element"]
 """;
-        AssertQueryResult(source, @"$[-2]", @"[]");
+        AssertQueryResultIsEmpty(source, @"$[-2]");
     }
     [Test]
     public void BracketNotationWithNumber()
@@ -435,7 +435,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 { "0": "value" }
 """;
-        AssertQueryResult(source, @"$[0]", @"[]");
+        AssertQueryResultIsEmpty(source, @"$[0]");
     }
     [Test]
     public void BracketNotationWithNumberOnShortArray()
@@ -443,7 +443,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 ["one element"]
 """;
-        AssertQueryResult(source, @"$[1]", @"[]");
+        AssertQueryResultIsEmpty(source, @"$[1]");
     }
     [Test]
     public void BracketNotationWithNumberOnString()
@@ -451,7 +451,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 "Hello World"
 """;
-        AssertQueryResult(source, "$[0]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[0]");
     }
     [Test]
     public void BracketNotationWithNumberAfterDotNotationWithWildcardOnNestedArraysWithDifferentLength()
@@ -475,7 +475,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 []
 """;
-        AssertQueryResult(source, "$[-1]", @"[]");
+        AssertQueryResultIsEmpty(source, "$[-1]");
     }
     [Test]
     public void BracketNotationWithNumber0()
@@ -629,7 +629,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
     "another": "entry"
 }
 """;
-        AssertQueryResult(source, """$['*']""", """[]""");
+        AssertQueryResultIsEmpty(source, """$['*']""");
     }
     [Test]
     public void BracketNotationWithSpaces()
@@ -694,7 +694,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
 [
 ]
 """;
-        AssertQueryResult(source, """$[*]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[*]""");
     }
     [Test]
     public void BracketNotationWithWildcardOnEmptyObject()
@@ -702,7 +702,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {}
 """;
-        AssertQueryResult(source, """$[*]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[*]""");
     }
     [Test]
     public void BracketNotationWithWildcardOnNullValueArray()
@@ -859,7 +859,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [{"id": 2}]
 """;
-        AssertQueryResult(source, """$.id""", """[]""");
+        AssertQueryResultIsEmpty(source, """$.id""");
     }
     [Test]
     public void DotNotationOnEmptyObjectValue()
@@ -887,7 +887,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {"key": "value"}
 """;
-        AssertQueryResult(source, """$.missing""", """[]""");
+        AssertQueryResultIsEmpty(source, """$.missing""");
     }
     [Test]
     public void DotNotationAfterArraySlice()
@@ -1115,7 +1115,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [4, 5, 6]
 """;
-        AssertQueryResult(source, """$.length""", """[]""");
+        AssertQueryResultIsEmpty(source, """$.length""");
     }
     [Test]
     public void DotNotationWithKeyNamedNull()
@@ -1248,7 +1248,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 []
 """;
-        AssertQueryResult(source, """$.*""", """[]""");
+        AssertQueryResultIsEmpty(source, """$.*""");
     }
     [Test]
     public void DotNotationWithWildcardOnEmptyObject()
@@ -1256,7 +1256,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {}
 """;
-        AssertQueryResult(source, """$.*""", """[]""");
+        AssertQueryResultIsEmpty(source, """$.*""");
     }
     [Test]
     public void DotNotationWithWildcardOnObject()
@@ -1319,7 +1319,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
     public void DotNotationWithWildcardAfterRecursiveDescentOnScalar()
     {
         var source = """42""";
-        AssertQueryResult(source, """$..*""", """[]""");
+        AssertQueryResultIsEmpty(source, """$..*""");
     }
     [Test]
     public void DotNotationWithoutDot()
@@ -1365,7 +1365,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
 """;
         AssertQueryResult(source, """$[?(@.key)]""", """[{"key": 1}]""");
     }
-    [Test] //TODO
+    [Test]
     public void FilterExpressionAfterDotNotationWithWildcardAfterRecursiveDescent()
     {
         var source = """
@@ -1441,7 +1441,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
   {"key": ""}
 ]
 """;
-        AssertQueryResult(source, """$[?(@.key>0 && false)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@.key>0 && false)]""");
     }
     [Test]
     public void FilterExpressionWithBooleanAndOperatorAndValueTrue()
@@ -1654,7 +1654,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
 [{"key": 42}]
 ]
 """;
-        AssertQueryResult(source, """$[?(@.key==43)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@.key==43)]""");
     }
     [Test]
     public void FilterExpressionWithEqualsOnObject()
@@ -1680,7 +1680,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 {"id": 2}
 """;
-        AssertQueryResult(source, """$[?(@.id==2)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@.id==2)]""");
     }
     [Test]
     public void FilterExpressionWithEqualsArray()
@@ -1814,7 +1814,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [[1, 2, 3], [1], [2, 3], 1, 2]
 """;
-        AssertQueryResult(source, """$[?(@[0:1]==1)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@[0:1]==1)]""");
     }
     [Test, Ignore("TODO: Detect not singular selectors")]
     public void FilterExpressionWithEqualsNumberForBracketNotationWithStar()
@@ -1822,7 +1822,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [[1,2], [2,3], [1], [2], [1, 2, 3], 1, 2, 3]
 """;
-        AssertQueryResult(source, """$[?(@[*]==2)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@[*]==2)]""");
     }
     [Test, Ignore("TODO: Detect not singular selectors")]
     public void FilterExpressionWithEqualsNumberForDotNotationWithStar()
@@ -1830,7 +1830,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
         var source = """
 [[1,2], [2,3], [1], [2], [1, 2, 3], 1, 2, 3]
 """;
-        AssertQueryResult(source, """$[?(@.*==2)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@.*==2)]""");
     }
     [Test]
     public void FilterExpressionWithEqualsNumberWithFraction()
@@ -2137,7 +2137,7 @@ sealed class JsonPathComparisonTests: JsonPathQueryTestFixture
   [1,2,3]
 ]
 """;
-        AssertQueryResult(source, """$[?(@.length == 4)]""", """[]""");
+        AssertQueryResultIsEmpty(source, """$[?(@.length == 4)]""");
     }
     [Test]
     public void FilterExpressionWithLessThan()

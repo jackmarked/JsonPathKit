@@ -31,7 +31,7 @@ partial class Parser
             return LogicalNotExpression();
         ExpressionSyntax? left = null;
         List<SegmentSyntax>? segments = null;
-        QueryType queryType = QueryType.CurentNode;
+        var queryType = QueryType.CurentNode;
         if(nextToken.Kind == SyntaxKind.MemberNameToken && nextToken.Text is not ("null" or "true" or "false"))
         {
             left = FunctionExpression();
@@ -40,17 +40,14 @@ partial class Parser
         {
             left = ParenthesizedExpression();
         }
-        else if(nextToken.Kind == SyntaxKind.DollarMarkToken)
+        else if(TryReadToken(SyntaxKind.DollarMarkToken))
         {
-            Expect(SyntaxKind.DollarMarkToken);
             segments = Segments();
             queryType = QueryType.RootNode;
         }
-        else if(nextToken.Kind == SyntaxKind.AtToken)
+        else if(TryReadToken(SyntaxKind.AtToken))
         {
-            Expect(SyntaxKind.AtToken);
             segments = Segments();
-            queryType = QueryType.CurentNode;
         }
         if(segments != null)
         {
@@ -69,21 +66,15 @@ partial class Parser
     }
     ExpressionSyntax? Comparable()
     {
-        var lieral = Literal(true);
-        if(lieral != null)
-            return lieral;
+        var literal = Literal(true);
+        if(literal != null)
+            return literal;
         if(nextToken.Kind == SyntaxKind.MemberNameToken)
             return FunctionExpression();
-        if(nextToken.Kind == SyntaxKind.DollarMarkToken)
-        {
-            Expect(SyntaxKind.DollarMarkToken);
+        if(TryReadToken(SyntaxKind.DollarMarkToken))
             return new SingularQueryExpressionSyntax(QueryType.RootNode, Segments());
-        }
-        if(nextToken.Kind == SyntaxKind.AtToken)
-        {
-            Expect(SyntaxKind.AtToken);
+        if(TryReadToken(SyntaxKind.AtToken))
             return new SingularQueryExpressionSyntax(QueryType.CurentNode, Segments());
-        }
         AddErrorAndReadToken("Invalid comparable.");
         return null;
     }
@@ -117,13 +108,7 @@ partial class Parser
         AddErrorAndReadToken("Invalid literal.");
         return null!;
     }
-    void Expect(Func<Token, bool> predicate)
-    {
-        if(!predicate(nextToken))
-            AddError($"Unexpected token '{nextToken.Text}'.");
-        ReadToken();
-    }
-    private bool IsComparsion(Token token)
+    static bool IsComparsion(Token token)
     {
         return token.Kind switch
         {
@@ -141,11 +126,8 @@ partial class Parser
             return new(ParenthesizedExpression());
         if(nextToken.Kind == SyntaxKind.MemberNameToken)
             return new(FunctionExpression());
-        if(nextToken.Kind == SyntaxKind.DollarMarkToken)
-        {
-            Expect(SyntaxKind.DollarMarkToken);
+        if(TryReadToken(SyntaxKind.DollarMarkToken))
             return new(new FilterQueryExpressionSyntax(QueryType.RootNode, Segments()));
-        }
         Expect(SyntaxKind.AtToken);
         return new(new FilterQueryExpressionSyntax(QueryType.CurentNode, Segments()));
     }
@@ -167,7 +149,7 @@ partial class Parser
         Expect(SyntaxKind.CloseParenToken);
         return new(nameToken.Text, arguments ?? []);
     }
-    private IReadOnlyList<ExpressionSyntax> Arguments()
+    IReadOnlyList<ExpressionSyntax> Arguments()
     {
         var result = new List<ExpressionSyntax>();
         do

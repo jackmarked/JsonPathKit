@@ -49,7 +49,7 @@ abstract class JsonPathQueryTestFixture
             JsonValueKind.String or JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False or JsonValueKind.Null => JsonValue.Create(element),
             _ => null,
         };
-    protected void AssertQueryResult(string jsonSource, string querySource, string expectedResultSource, bool arrayAsSet = false)
+    protected static void AssertQueryResult(string jsonSource, string querySource, string expectedResultSource, bool arrayAsSet = false)
     {
         // Arrange.
         var document = JsonDocument.Parse(jsonSource);
@@ -63,10 +63,10 @@ abstract class JsonPathQueryTestFixture
         // Assert.
         AssertJsonEquivalent(expectedResult, queryResult, arrayAsSet);
     }
-    protected void AssertInvalidQuery(string jsonSource, string querySource, string expectedResultSource, bool arrayAsSet = false)
+    protected static void AssertInvalidQuery(string jsonSource, string querySource, string expectedResultSource, bool arrayAsSet = false)
     {
         Assert.That(() => AssertQueryResult(jsonSource, querySource, expectedResultSource, arrayAsSet), Throws.Exception);
     }
-    protected void AssertQueryResultIsEmpty(string jsonSource, string querySource) =>
+    protected static void AssertQueryResultIsEmpty(string jsonSource, string querySource) =>
         AssertQueryResult(jsonSource, querySource, "[]");
 }

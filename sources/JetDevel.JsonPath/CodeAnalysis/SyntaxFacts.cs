@@ -1,4 +1,5 @@
 ﻿namespace JetDevel.JsonPath.CodeAnalysis;
+
 public static class SyntaxFacts
 {
     internal static string GetText(SyntaxKind kind)
@@ -27,26 +28,28 @@ public static class SyntaxFacts
             _ => string.Empty
         };
     }
-    internal static string GetStringLiteralValue(string text)
+    internal static string GetStringLiteralValue(ReadOnlySpan<char> text)
     {
-        if(string.IsNullOrEmpty(text) || text.Length < 2)
+        if(text.Length < 2)
             return string.Empty;
-        ReadOnlySpan<char> sourceSpan = text.AsSpan()[1..^1];
+        var sourceSpan = text[1..^1];
         return Unescape(sourceSpan);
     }
 
-    static string Unescape(ReadOnlySpan<char> sourceSpan)
+    static string Unescape(ReadOnlySpan<char> source)
     {
-        var span = sourceSpan.Length > 80 ? new char[sourceSpan.Length] : stackalloc char[sourceSpan.Length];
+        var length = source.Length;
+        var span = length > 80 ? new char[length] : stackalloc char[length];
         var resultLength = 0;
-        for(int i = 0; i < sourceSpan.Length; i++)
+        int index = 0;
+        while(index < length)
         {
-            var ch = sourceSpan[i];
-            var resultChar = ch;
-            if(ch == '\\')
+            var currentChar = source[index];
+            var resultChar = currentChar;
+            if(currentChar == '\\')
             {
-                i++;
-                var nextChar = sourceSpan[i];
+                index++;
+                var nextChar = source[index];
                 switch(nextChar)
                 {
                     case '\'':
@@ -71,14 +74,15 @@ public static class SyntaxFacts
                         resultChar = '\x0009';
                         break;
                     case 'u':
-                        resultChar = (char)HexToDecimal(sourceSpan.Slice(i + 1, 4));
-                        i += 4;
+                        resultChar = (char)HexToDecimal(source.Slice(index + 1, 4));
+                        index += 4;
                         break;
                 }
             }
             span[resultLength++] = resultChar;
+            index++;
         }
-        return new string(span[..resultLength]);
+        return new(span[..resultLength]);
     }
     static int HexToDecimal(ReadOnlySpan<char> chars)
     {

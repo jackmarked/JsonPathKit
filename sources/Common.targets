@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
