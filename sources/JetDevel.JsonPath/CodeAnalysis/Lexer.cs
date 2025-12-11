@@ -329,7 +329,7 @@ public sealed partial class Lexer
     {
         if(ch < 0x80)
         {
-            if(KnownCodes.Alpha.Contains((byte)ch))
+            if(KnownCodes.Letters.Contains((byte)ch))
                 return true;
             return ch == '_';
         }

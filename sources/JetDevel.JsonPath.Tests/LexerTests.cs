@@ -1,5 +1,7 @@
-﻿using System.Text;
-using JetDevel.JsonPath.CodeAnalysis;
+﻿using JetDevel.JsonPath.CodeAnalysis;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace JetDevel.JsonPath.Tests;
 
