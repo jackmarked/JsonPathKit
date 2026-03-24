@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration(GlobalAssemblyInformation.Configuration)]
 [assembly: AssemblyFileVersion(GlobalAssemblyInformation.AssemblyVersion)]
 [assembly: AssemblyProduct(GlobalAssemblyInformation.ProductName)]
-[assembly: AssemblyCopyright("Copyright © 2024 " + GlobalAssemblyInformation.CompanyName)]
+[assembly: AssemblyCopyright("Copyright © 2026 " + GlobalAssemblyInformation.CompanyName)]
 [assembly: AssemblyTrademark(GlobalAssemblyInformation.CompanyName)]
 #pragma warning restore CS0436 // Type conflicts with imported type
 [assembly: ComVisible(false)]

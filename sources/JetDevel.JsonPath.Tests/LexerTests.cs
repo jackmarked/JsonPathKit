@@ -33,7 +33,7 @@ sealed class LexerTests
     static List<SyntaxKind> GetTokenKinds(string source, bool withEof = false)
     {
         var result = GetTokens(source, withEof);
-        return result.Select(s => s.Kind).ToList();
+        return [.. result.Select(s => s.Kind)];
     }
     static List<SyntaxKind> GetTokenKinds(ReadOnlySpan<byte> source, bool withEof = false)
     {
@@ -72,10 +72,7 @@ sealed class LexerTests
     public void Parse_BracketedSelectorWithNameSelectorUnicode_ReturnsValidSelectors()
     {
         var result = GetTokens("$.🙏");
-        Assert.Multiple(() =>
-        {
-            Assert.That(result[^1].Text, Is.EqualTo("🙏"));
-        });
+        Assert.That(result[^1].Text, Is.EqualTo("🙏"));
     }
     [Test]
     public void GetTokens_CallWithEmptyReader_ReturnsEndOfFile()
